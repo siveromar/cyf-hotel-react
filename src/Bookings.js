@@ -1,25 +1,33 @@
 import React, { useState, useEffect } from "react";
 import Search from "./Search.js";
 import SearchResults from "./SearchResults.js";
-import LoadingWait from "./LoadingWait.js";
 import FakeBookings from "./data/fakeBookings.json";
 
 const Bookings = () => {
-  let [dataAvailable, setDataAvailable] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [bookings, setBookings] = useState([]);
+  const [masterBookings, setMasterBookings] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // fetch(`https://cyf-react.glitch.me`)
-    fetch(`https://cyf-react.glitch.me/delayed`)
-      .then((res) => res.json())
+    // fetch("https://cyf-react.glitch.me/error")
+    fetch("https://cyf-react.glitch.me/delayed")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Error occurred while fetching data");
+        }
+        return res.json();
+      })
       .then((data) => {
         setBookings(data);
         setMasterBookings(data);
-        setDataAvailable(true);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
       });
   }, []);
-
-  let [bookings, setBookings] = useState([]);
-  let [masterBookings, setMasterBookings] = useState([]);
 
   const search = (searchVal) => {
     let filteredBookings = masterBookings.filter((abooking) => {
@@ -36,7 +44,14 @@ const Bookings = () => {
     <div className="App-content">
       <div className="container">
         <Search search={search} />
-        {dataAvailable ? <SearchResults results={bookings} /> : <LoadingWait />}
+
+        {error ? (
+          <p>{error}</p>
+        ) : loading ? (
+          <p>Please wait while the data is loading...</p>
+        ) : (
+          <SearchResults results={bookings} />
+        )}
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ const TableRow = (props) => {
       </td>
       <td>
         <button
-          className="btn-primary"
+          className="btn btn-primary"
           onClick={() => {
             handleProfileClick(props.aBooking.id);
           }}
