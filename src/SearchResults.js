@@ -1,14 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import TableHeading from "./TableHeading";
 import TableBody from "./TableBody";
-
+import CustomerProfile from "./CustomerProfile";
 
 const SearchResults = (props) => {
+  const [customerProfileId, setCustomerProfileId] = useState("");
+
+  console.log("props value", props);
   return (
-    <table className="table">
-      <TableHeading />
-      <TableBody bodyData={props.results} />
-    </table>
+    <div>
+      <table className="table">
+        <TableHeading />
+        <TableBody
+          bodyData={props.results}
+          customerProfileId={customerProfileId}
+          setCustomerProfileId={setCustomerProfileId}
+        />
+      </table>
+      <CustomerProfile customerProfileId={customerProfileId} />
+    </div>
   );
 };
 
